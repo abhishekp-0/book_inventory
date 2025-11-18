@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookStore Inventory Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <%- include('partials/navbar', {links: links}) %>
+    
+    <!-- Hero Section -->
+    <main>
+        <section class="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-10"></div>
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+                <div class="text-center">
+                    <h1 class="text-5xl md:text-6xl font-extrabold mb-6 animate-fade-in">
+                        Welcome to BookStore
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-purple-100 max-w-3xl mx-auto">
+                        Your comprehensive book inventory management system. Organize, track, and manage your book collection with ease.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/book" 
+                           class="inline-flex items-center justify-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                            </svg>
+                            Browse Books
+                        </a>
+                        <a href="/category" 
+                           class="inline-flex items-center justify-center px-8 py-4 bg-purple-500 hover:bg-purple-400 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                            </svg>
+                            View Genres
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Decorative Elements -->
+            <div class="absolute bottom-0 left-0 right-0">
+                <svg class="w-full h-16 md:h-24 fill-current text-gray-50" viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 48h1440V24c-157.99 24-315.99 24-473.99 0-157.99-24-315.99-24-473.99 0C333.99 48 175.99 48 0 24V48z"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Manage Your Inventory</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Everything you need to keep track of your book collection in one place</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1: Books -->
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden group">
+                    <div class="bg-gradient-to-br from-indigo-500 to-indigo-600 p-8 text-white">
+                        <div class="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Book Management</h3>
+                        <p class="text-indigo-100 mb-4">Add, edit, and organize your entire book collection with detailed information</p>
+                    </div>
+                    <div class="p-6 bg-gray-50">
+                        <a href="/book" class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700">
+                            Manage Books
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Feature 2: Genres -->
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden group">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 p-8 text-white">
+                        <div class="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Genre Categories</h3>
+                        <p class="text-purple-100 mb-4">Categorize books into genres for easy browsing and organization</p>
+                    </div>
+                    <div class="p-6 bg-gray-50">
+                        <a href="/category" class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700">
+                            View Genres
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Feature 3: Inventory -->
+                <article class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden group">
+                    <div class="bg-gradient-to-br from-pink-500 to-pink-600 p-8 text-white">
+                        <div class="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">Stock Tracking</h3>
+                        <p class="text-pink-100 mb-4">Monitor inventory levels, pricing, and availability in real-time</p>
+                    </div>
+                    <div class="p-6 bg-gray-50">
+                        <a href="/book" class="inline-flex items-center text-pink-600 font-semibold hover:text-pink-700">
+                            Track Inventory
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Quick Actions Section -->
+        <section class="bg-white py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+                    <p class="text-lg text-gray-600">Get started with common tasks</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                    <a href="/book/new" 
+                       class="flex items-center p-6 bg-gradient-to-r from-indigo-50 to-indigo-100 border-2 border-indigo-200 rounded-xl hover:border-indigo-400 hover:shadow-lg transition-all duration-200 group">
+                        <div class="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-lg">Add New Book</h3>
+                            <p class="text-gray-600 text-sm">Add a book to your inventory</p>
+                        </div>
+                    </a>
+
+                    <a href="/category/new" 
+                       class="flex items-center p-6 bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-purple-200 rounded-xl hover:border-purple-400 hover:shadow-lg transition-all duration-200 group">
+                        <div class="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-lg">Create Genre</h3>
+                            <p class="text-gray-600 text-sm">Add a new genre category</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

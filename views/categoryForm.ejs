@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - BookStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <%- include('partials/navbar', {links: links}) %>
+    
+    <main class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= title %></h1>
+            <p class="text-gray-600">Create a new genre category to organize your books</p>
+        </div>
+
+        <%- include('partials/errors') %>
+
+        <!-- Form Card -->
+        <form method="POST" action="/category/new" class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-8 space-y-6">
+                <!-- Genre Name -->
+                <div>
+                    <label for="categoryName" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Genre Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" 
+                           id="categoryName" 
+                           name="categoryName" 
+                           value="<%= category ? category.categoryName : '' %>" 
+                           required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                           placeholder="e.g., Science Fiction, Mystery, Biography"
+                           aria-required="true">
+                    <p class="mt-1 text-sm text-gray-500">Enter a descriptive name for this genre</p>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Description
+                    </label>
+                    <textarea id="description" 
+                              name="description" 
+                              rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors resize-y"
+                              placeholder="Enter a brief description of this genre (optional)"><%= category ? category.description || '' : '' %></textarea>
+                    <p class="mt-1 text-sm text-gray-500">Optional: Add context about what types of books belong in this genre</p>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="bg-gray-50 px-8 py-6 flex flex-col sm:flex-row gap-3 sm:justify-end">
+                <a href="/category" 
+                   class="inline-flex justify-center items-center px-6 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                   aria-label="Cancel and go back">
+                    Cancel
+                </a>
+                <button type="submit" 
+                        class="inline-flex justify-center items-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Add Genre
+                </button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

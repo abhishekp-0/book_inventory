@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= book.title %> - BookStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <%- include('partials/navbar', {links: links}) %>
+    
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="/book" class="text-gray-600 hover:text-indigo-600 inline-flex items-center text-sm font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                        </svg>
+                        Books
+                    </a>
+                </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="ml-1 text-gray-500 text-sm font-medium md:ml-2 truncate"><%= book.title %></span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Book Card -->
+        <article class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="md:flex">
+                <div class="md:flex-shrink-0 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center p-12">
+                    <svg class="w-32 h-32 text-indigo-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                    </svg>
+                </div>
+                <div class="p-8 w-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= book.title %></h1>
+                            <p class="text-lg text-gray-600 flex items-center mb-3">
+                                <svg class="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                                <%= book.author %>
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-4xl font-bold text-indigo-600">$<%= book.price %></p>
+                            <p class="text-sm text-gray-500 mt-1">Price</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">ISBN</p>
+                            <p class="text-lg font-semibold text-gray-900"><%= book.isbn %></p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Genre</p>
+                            <a href="/category/<%= book.category_id %>" class="text-lg font-semibold text-indigo-600 hover:text-indigo-700">
+                                <%= book.category_name %>
+                            </a>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Stock Available</p>
+                            <p class="text-lg font-semibold <%= book.stock > 10 ? 'text-green-600' : book.stock > 0 ? 'text-yellow-600' : 'text-red-600' %>">
+                                <%= book.stock %> units
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-1">Status</p>
+                            <p class="text-lg font-semibold">
+                                <% if (book.stock > 0) { %>
+                                    <span class="text-green-600">In Stock</span>
+                                <% } else { %>
+                                    <span class="text-red-600">Out of Stock</span>
+                                <% } %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <% if (book.description) { %>
+                        <div class="border-t border-gray-200 pt-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-3">Description</h2>
+                            <p class="text-gray-700 leading-relaxed"><%= book.description %></p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="bg-gray-50 px-8 py-6 flex flex-wrap gap-3">
+                <a href="/book/<%= book.id %>/update" 
+                   class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md transition-colors"
+                   aria-label="Edit <%= book.title %>">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    Edit Book
+                </a>
+                <form method="POST" action="/book/<%= book.id %>/delete" class="inline" onsubmit="return confirm('Are you sure you want to delete &quot;<%= book.title %>&quot;? This action cannot be undone.')">
+                    <button type="submit" 
+                            class="inline-flex items-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-md transition-colors"
+                            aria-label="Delete <%= book.title %>">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete Book
+                    </button>
+                </form>
+                <a href="/book" 
+                   class="inline-flex items-center px-6 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors ml-auto"
+                   aria-label="Back to books list">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Books
+                </a>
+            </div>
+        </article>
+    </main>
+</body>
+</html>
