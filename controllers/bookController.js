@@ -32,53 +32,65 @@ const validateBook = [
         .isInt({min:1}).withMessage("Please select a valid genre.")
 ];
 
-export async function getAllBooks(req,res) {
-    const books = await db.getAllBooks();
-    res.render("books",{books:books,links:links});
+export async function getAllBooks(req, res, next) {
+    try {
+        const books = await db.getAllBooks();
+        res.render("books", { books: books, links: links });
+    } catch (error) {
+        next(error);
+    }
 }
 
-export async function getBookById(req,res) {
+export async function getBookById(req, res, next) {
     const { bookId } = req.params;
     
     try {
         const book = await db.getBookById(Number(bookId));
     
         if (!book) {
-            res.status(404).send("Book not found");
-            return;
+            const error = new Error("Book not found");
+            error.statusCode = 404;
+            return next(error);
         }
     
-        res.render("bookDetail", {book:book, links:links});
+        res.render("bookDetail", { book: book, links: links });
     } catch (error) {
-        console.error("Error retrieving Book:",error);
-        res.status(500).send("Internal Server Error");
+        next(error);
     }
 }
 
-export async function renderForm(req,res) {
-    const categories = await db.getAllCategories();
-    res.render("form", {
-        title: "Add New Book",
-        links: links,
-        categories: categories,
-        book: null
-    });
+export async function renderForm(req, res, next) {
+    try {
+        const categories = await db.getAllCategories();
+        res.render("form", {
+            title: "Add New Book",
+            links: links,
+            categories: categories,
+            book: null
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 export const createBook = [
     validateBook,
-    async (req, res) => {
+    async (req, res, next) => {
         const errors = validationResult(req);
         
         if (!errors.isEmpty()) {
-            const categories = await db.getAllCategories();
-            return res.status(400).render("form", {
-                title: "Add New Book",
-                errors: errors.array(),
-                links: links,
-                categories: categories,
-                book: req.body
-            });
+            try {
+                const categories = await db.getAllCategories();
+                return res.status(400).render("form", {
+                    title: "Add New Book",
+                    errors: errors.array(),
+                    links: links,
+                    categories: categories,
+                    book: req.body
+                });
+            } catch (error) {
+                return next(error);
+            }
         }
         
         const bookData = matchedData(req);
@@ -87,30 +99,24 @@ export const createBook = [
             await db.createBook(bookData);
             res.redirect("/book");
         } catch (error) {
-            console.error("Error creating Book:",error);
-            const categories = await db.getAllCategories();
-            res.status(500).render("form", {
-                title: "Add New Book",
-                errors: [{msg: "Database error: " + error.message}],
-                links: links,
-                categories: categories,
-                book: req.body
-            });
+            next(error);
         }
     }
 ];
 
-export async function renderUpdateBookForm(req, res) {
+export async function renderUpdateBookForm(req, res, next) {
     const { bookId } = req.params;
 
     try {
         const book = await db.getBookById(Number(bookId));
-        const categories = await db.getAllCategories();
-
+        
         if (!book) {
-            res.status(404).send("Book not found");
-            return;
+            const error = new Error("Book not found");
+            error.statusCode = 404;
+            return next(error);
         }
+        
+        const categories = await db.getAllCategories();
 
         res.render("updateBookForm", {
             title: "Update Book",
@@ -119,27 +125,30 @@ export async function renderUpdateBookForm(req, res) {
             categories: categories
         });
     } catch (error) {
-        console.error("Error retrieving Book:", error);
-        res.status(500).send("Internal Server Error");
+        next(error);
     }
 }
 
 export const updateBookById = [
     validateBook,
-    async (req, res) => {
+    async (req, res, next) => {
         const { bookId } = req.params;
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            const book = await db.getBookById(Number(bookId));
-            const categories = await db.getAllCategories();
-            return res.status(400).render("updateBookForm", {
-                title: "Update Book",
-                book: {...book, ...req.body},
-                errors: errors.array(),
-                links: links,
-                categories: categories
-            });
+            try {
+                const book = await db.getBookById(Number(bookId));
+                const categories = await db.getAllCategories();
+                return res.status(400).render("updateBookForm", {
+                    title: "Update Book",
+                    book: {...book, ...req.body},
+                    errors: errors.array(),
+                    links: links,
+                    categories: categories
+                });
+            } catch (error) {
+                return next(error);
+            }
         }
 
         const bookData = matchedData(req);
@@ -148,40 +157,32 @@ export const updateBookById = [
             const updatedBook = await db.updateBookById(Number(bookId), bookData);
 
             if (!updatedBook) {
-                res.status(404).send("Book not found");
-                return;
+                const error = new Error("Book not found");
+                error.statusCode = 404;
+                return next(error);
             }
 
             res.redirect("/book");
         } catch (error) {
-            console.error("Error updating Book:", error);
-            const book = await db.getBookById(Number(bookId));
-            const categories = await db.getAllCategories();
-            res.status(500).render("updateBookForm", {
-                title: "Update Book",
-                book: {...book, ...req.body},
-                errors: [{msg: "Database error: " + error.message}],
-                links: links,
-                categories: categories
-            });
+            next(error);
         }
     }
 ];
 
-export async function deleteBookById(req,res) {
-    const {bookId}=req.params;
+export async function deleteBookById(req, res, next) {
+    const { bookId } = req.params;
     
     try {
         const deletedBook = await db.deleteBookById(Number(bookId));
         
         if (!deletedBook) {
-            res.status(404).send("Book not found");
-            return;
+            const error = new Error("Book not found");
+            error.statusCode = 404;
+            return next(error);
         }
         
         res.redirect("/book");
     } catch (error) {
-        console.error("Error deleting Book:", error);
-        res.status(500).send("Internal Server Error");
+        next(error);
     }
 }

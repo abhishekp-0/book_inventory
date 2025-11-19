@@ -19,22 +19,28 @@ const validateCategory = [
         .isLength({max:1000}).withMessage("Description must not exceed 1000 characters.")
 ];
 
-export async function getAllCategories(req, res) {
-  const categories = await db.getAllCategories();
-  res.render("categories",{categories:categories,links:links});
+export async function getAllCategories(req, res, next) {
+    try {
+        const categories = await db.getAllCategories();
+        res.render("categories", { categories: categories, links: links });
+    } catch (error) {
+        next(error);
+    }
 }
 
-export async function getCategoryById(req,res) {
+export async function getCategoryById(req, res, next) {
     const { categoryId } = req.params;
 
     try {
         const category = await db.getCategoryById(Number(categoryId));
-        const categoryBooks = await db.getBooksByCategoryId(Number(categoryId));
-    
+        
         if (!category) {
-            res.status(404).send("Genre not found");
-            return;
+            const error = new Error("Genre not found");
+            error.statusCode = 404;
+            return next(error);
         }
+        
+        const categoryBooks = await db.getBooksByCategoryId(Number(categoryId));
     
         res.render("categoryDetail", {
             category: category, 
@@ -42,22 +48,25 @@ export async function getCategoryById(req,res) {
             links: links
         });
     } catch (error) {
-        console.error("Error retrieving Genre:",error);
-        res.status(500).send("Internal Server Error");
+        next(error);
     }
 }
 
-export async function renderCategoryForm(req,res) {
-    res.render("categoryForm", {
-        title: "Add New Genre",
-        links: links,
-        category: null
-    });
+export async function renderCategoryForm(req, res, next) {
+    try {
+        res.render("categoryForm", {
+            title: "Add New Genre",
+            links: links,
+            category: null
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
 export const createCategory = [
     validateCategory,
-    async (req, res) => {
+    async (req, res, next) => {
         const errors = validationResult(req);
         
         if (!errors.isEmpty()) {
@@ -75,26 +84,21 @@ export const createCategory = [
             await db.createCategory(categoryName, description);
             res.redirect("/category");
         } catch (error) {
-            console.error("Error creating Genre:",error);
-            res.status(500).render("categoryForm", {
-                title: "Add New Genre",
-                errors: [{msg: "Database error: " + error.message}],
-                links: links,
-                category: req.body
-            });
+            next(error);
         }
     }
 ];
 
-export async function renderUpdateCategoryForm(req, res) {
+export async function renderUpdateCategoryForm(req, res, next) {
     const { categoryId } = req.params;
 
     try {
         const category = await db.getCategoryById(Number(categoryId));
 
         if (!category) {
-            res.status(404).send("Genre not found");
-            return;
+            const error = new Error("Genre not found");
+            error.statusCode = 404;
+            return next(error);
         }
 
         res.render("updateCategoryForm", {
@@ -103,25 +107,28 @@ export async function renderUpdateCategoryForm(req, res) {
             links: links,
         });
     } catch (error) {
-        console.error("Error retrieving Genre:", error);
-        res.status(500).send("Internal Server Error");
+        next(error);
     }
 }
 
 export const updateCategoryById = [
     validateCategory,
-    async (req, res) => {
+    async (req, res, next) => {
         const { categoryId } = req.params;
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            const category = await db.getCategoryById(Number(categoryId));
-            return res.status(400).render("updateCategoryForm", {
-                title: "Update Genre",
-                category: {...category, ...req.body},
-                errors: errors.array(),
-                links: links,
-            });
+            try {
+                const category = await db.getCategoryById(Number(categoryId));
+                return res.status(400).render("updateCategoryForm", {
+                    title: "Update Genre",
+                    category: {...category, ...req.body},
+                    errors: errors.array(),
+                    links: links,
+                });
+            } catch (error) {
+                return next(error);
+            }
         }
 
         const { categoryName, description } = matchedData(req);
@@ -130,44 +137,32 @@ export const updateCategoryById = [
             const updatedCategory = await db.updateCategoryById(Number(categoryId), categoryName, description);
 
             if (!updatedCategory) {
-                res.status(404).send("Genre not found");
-                return;
+                const error = new Error("Genre not found");
+                error.statusCode = 404;
+                return next(error);
             }
 
             res.redirect("/category");
         } catch (error) {
-            console.error("Error updating Genre:", error);
-            const category = await db.getCategoryById(Number(categoryId));
-            res.status(500).render("updateCategoryForm", {
-                title: "Update Genre",
-                category: {...category, ...req.body},
-                errors: [{msg: "Database error: " + error.message}],
-                links: links,
-            });
+            next(error);
         }
     }
 ];
 
-export async function deleteCategoryById(req,res) {
-    const {categoryId}=req.params;
+export async function deleteCategoryById(req, res, next) {
+    const { categoryId } = req.params;
     
     try {
         const deletedCategory = await db.deleteCategoryById(Number(categoryId));
         
         if (!deletedCategory) {
-            res.status(404).send("Genre not found");
-            return;
+            const error = new Error("Genre not found");
+            error.statusCode = 404;
+            return next(error);
         }
         
         res.redirect("/category");
     } catch (error) {
-        console.error("Error deleting Genre:", error);
-        
-        // Check if error is due to foreign key constraint
-        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
-            res.status(400).send("Cannot delete genre: Books are still assigned to this genre.");
-        } else {
-            res.status(500).send("Internal Server Error");
-        }
+        next(error);
     }
 }
